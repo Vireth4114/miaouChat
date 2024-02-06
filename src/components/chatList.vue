@@ -23,11 +23,13 @@ watch(messages, () => {
 
 <template>
     <div id="cont" ref="cont">
-        <p v-for="(mess, index) in messages" :key="mess">
-            {{ mess }}
-            <button @click="modifier()">Modifier</button>
-            <button @click="supprimer(index)"> Supprimer</button>
-        </p>
+        <div id='message' v-for="(mess, index) in messages" :key="mess">
+            <span>{{ mess }}</span>
+            <div id="controlMessage">
+                <button @click="modifier()">Modifier</button>
+                <button @click="supprimer(index)"> Supprimer</button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -46,5 +48,15 @@ watch(messages, () => {
     
     #cont > :first-child {
         margin-top: auto;
+    }
+
+    #message {
+        display: grid;
+        grid-template-columns: 10fr 1fr;
+    }
+
+    #controlMessage {
+        display: flex;
+        gap: 10px;
     }
 </style>
