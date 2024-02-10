@@ -1,34 +1,62 @@
 <script setup>
 import { ref, watch } from 'vue';
+import ChatInput from './chatInput.vue';
+
 const props = defineProps(["messages"])
 const emit = defineEmits(["supprimer"])
 const cont = ref(null)
 const messages = props.messages
+let selected = null
 
+function modifier(index) {
+    if (selected != null) {
+        antiModif(selected)
+    }
+    const message = cont.value.children.item(index)
+    message.firstElementChild.style.display = "none"
+    const modifInput = message.lastElementChild
+    modifInput.classList.add("chatInput")
+    modifInput.firstElementChild.value = messages[index]
+    modifInput.firstElementChild.focus()
+    selected = index
+}
 
-function modifier() {
+function antiModif(index) {
+    const message = cont.value.children.item(index)
+    message.firstElementChild.style.display = "grid"
+    message.lastElementChild.classList = "hidden"
+    selected = null
+}
 
+function valideModif(payload) {
+    antiModif(payload.index)
+    messages[payload.index] = payload.messageToSend
 }
 
 function supprimer(index) {
     emit("supprimer", {indexToSend: index})
 }
 
-watch(messages, () => {
+watch(messages, async () => {
     const lastMessage = cont.value.lastElementChild;
-    lastMessage.scrollIntoView();
+    if (lastMessage != null) {
+        setTimeout(() => lastMessage.scrollIntoView());
+    }
 })
 
 </script>
 
 <template>
     <div id="cont" ref="cont">
-        <div id='message' v-for="(mess, index) in messages" :key="mess">
-            <span>{{ mess }}</span>
-            <div id="controlMessage">
-                <button @click="modifier()">Modifier</button>
-                <button @click="supprimer(index)"> Supprimer</button>
+        <div v-for="(mess, index) in messages" :key="mess">
+            <div id="message">
+                <span>{{ mess }}</span>
+                <div id="controlMessage">
+                    <button @click="modifier(index)">Modifier</button>
+                    <button @click="supprimer(index)"> Supprimer</button>
+                </div>
             </div>
+            <ChatInput @keyup.escape="antiModif(index)" class='hidden' :index=index @envoie-message="valideModif"/>
         </div>
     </div>
 </template>
@@ -39,11 +67,18 @@ watch(messages, () => {
         flex-flow: column;
         color: white;
         padding: 20px;
-        min-height: 90vh;
-        max-height: 90vh;
+        height: calc(100vh - 80px);
         overflow-y: auto;
-        scrollbar-width: thin;
         scroll-behavior: smooth;
+    }
+
+    ::-webkit-scrollbar {
+        background-color: #00000040;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #00000080;
+        border-radius: 100px;
     }
     
     #cont > :first-child {
