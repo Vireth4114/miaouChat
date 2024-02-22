@@ -1,11 +1,11 @@
 <script setup>
 
-import ChatView from "./views/chatView.vue";
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
   <div class='bg-[#38384C]'>
-    <ChatView />
+    <RouterView />
   </div>
 </template>
 

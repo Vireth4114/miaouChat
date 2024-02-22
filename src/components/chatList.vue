@@ -52,8 +52,8 @@ watch(messages, async () => {
             <div id="message">
                 <span>{{ mess }}</span>
                 <div id="controlMessage">
-                    <button @click="modifier(index)">Modifier</button>
-                    <button @click="supprimer(index)"> Supprimer</button>
+                    <button @click="modifier(index)"><em class="fa-solid fa-pencil"></em></button>
+                    <button @click="supprimer(index)"><em class="fa-solid fa-trash"></em></button>
                 </div>
             </div>
             <ChatInput @keyup.escape="antiModif(index)" class='hidden' :index=index @envoie-message="valideModif"/>
@@ -93,5 +93,7 @@ watch(messages, async () => {
     #controlMessage {
         display: flex;
         gap: 10px;
+        display: flex;
+        justify-content: end;
     }
 </style>
