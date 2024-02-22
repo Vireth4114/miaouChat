@@ -49,7 +49,8 @@ watch(messages, async () => {
 <template>
     <div id="cont" ref="cont">
         <div v-for="(mess, index) in messages" :key="mess">
-            <div id="message">
+            <div class='pt-3' id="message">
+                <img id='imageMessage' src="../assets/porcq.jpg">
                 <span>{{ mess }}</span>
                 <div id="controlMessage">
                     <button @click="modifier(index)"><em class="fa-solid fa-pencil"></em></button>
@@ -62,6 +63,12 @@ watch(messages, async () => {
 </template>
 
 <style>
+    #imageMessage {
+        width: 50px;
+        height: 50px;
+        border-radius: 100px;
+    }
+
     #cont {
         display: flex;
         flex-flow: column;
@@ -86,8 +93,14 @@ watch(messages, async () => {
     }
 
     #message {
+        word-break: break-all;
         display: grid;
-        grid-template-columns: 10fr 1fr;
+        grid-template-columns: 1fr 20fr 1fr;
+    }
+
+    #message span {
+        display: flex;
+        align-items: center;
     }
 
     #controlMessage {
