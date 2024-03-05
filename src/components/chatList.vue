@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue';
 import ChatInput from './chatInput.vue';
+import supabase from "../api/supabase";
 
 const props = defineProps(["messages"])
 const emit = defineEmits(["supprimer"])
@@ -33,8 +34,8 @@ function valideModif(payload) {
     messages[payload.index] = payload.messageToSend
 }
 
-function supprimer(index) {
-    emit("supprimer", {indexToSend: index})
+async function supprimer(index) {
+    await supabase.from('messages').delete().eq('id', index)
 }
 
 watch(messages, async () => {
@@ -50,11 +51,11 @@ watch(messages, async () => {
     <div id="cont" ref="cont">
         <div v-for="(mess, index) in messages" :key="mess">
             <div class='pt-3' id="message">
-                <img id='imageMessage' src="../assets/porcq.jpg">
-                <span>{{ mess }}</span>
+                <img id='imageMessage' :src=mess[0]>
+                <span>{{ mess[1] }}</span>
                 <div id="controlMessage">
                     <button @click="modifier(index)"><em class="fa-solid fa-pencil"></em></button>
-                    <button @click="supprimer(index)"><em class="fa-solid fa-trash"></em></button>
+                    <button @click="supprimer(mess[2])"><em class="fa-solid fa-trash"></em></button>
                 </div>
             </div>
             <ChatInput @keyup.escape="antiModif(index)" class='hidden' :index=index @envoie-message="valideModif"/>
@@ -64,6 +65,8 @@ watch(messages, async () => {
 
 <style>
     #imageMessage {
+        max-width: 10vw;
+        max-height: 10vw;
         width: 50px;
         height: 50px;
         border-radius: 100px;

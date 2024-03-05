@@ -7,6 +7,23 @@ import supabase from '../api/supabase'
 
 const listeDeMessages = ref([])
 
+async function helpme() {
+    const { data, error } = await supabase.from('messages').select("id, content, profiles (avatar_url)")
+    console.log(data)
+    listeDeMessages.value.length = 0
+    for (let i = 0; i < data.length; i++) {
+        let avatar = data[i]["profiles"]["avatar_url"];
+        if (avatar == null) {
+            avatar = "https://upload.wikimedia.org/wikipedia/en/8/86/Avatar_Aang.png"
+        }
+        listeDeMessages.value.push([avatar, data[i]["content"], data[i]["id"]])
+    }
+}
+
+setInterval(() => {
+    helpme()
+}, 1000);
+
 async function logOut() {
     const { error } = await supabase.auth.signOut()
     router.push({ path: 'login' })

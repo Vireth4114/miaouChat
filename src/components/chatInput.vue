@@ -1,14 +1,19 @@
 <script setup>
 import { ref, computed } from 'vue'
 import CustomButton from '../views/customButton.vue'
+import supabase from "../api/supabase";
 
 const emit = defineEmits(["envoieMessage"])
 const props = defineProps(["index"])
 const message = ref("")
 const index = props.index
 
-function envoieMessage(index) {
+async function envoieMessage(index) {
     if (message.value != "") {
+
+        const { data, error } = await supabase.auth.getUser()
+        await supabase.from('messages').insert({content: message.value, author_id: data["user"]["id"]})
+
         emit("envoieMessage", {messageToSend: message.value, index: index})
         message.value = ""
     }
